@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.NongchanpinweituoDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.nongchanpinweituo_name as nongchanpinweituoName
+        ,a.nongchanpinweituo_types as nongchanpinweituoTypes
+        ,a.nongchanpinweituo_photo as nongchanpinweituoPhoto
+        ,a.nongchanpinweituo_kucun_number as nongchanpinweituoKucunNumber
+        ,a.nongchanpinweituo_content as nongchanpinweituoContent
+        ,a.nongchanpinweituo_delete as nongchanpinweituoDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.NongchanpinweituoView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM nongchanpinweituo  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.nongchanpinweituoName != '' and params.nongchanpinweituoName != null and params.nongchanpinweituoName != 'null' ">
+                and a.nongchanpinweituo_name like CONCAT('%',#{params.nongchanpinweituoName},'%')
+            </if>
+            <if test="params.nongchanpinweituoTypes != null and params.nongchanpinweituoTypes != ''">
+                and a.nongchanpinweituo_types = #{params.nongchanpinweituoTypes}
+            </if>
+            <if test="params.nongchanpinweituoKucunNumberStart != null and params.nongchanpinweituoKucunNumberStart != ''">
+                <![CDATA[  and a.nongchanpinweituo_kucun_number >= #{params.nongchanpinweituoKucunNumberStart}   ]]>
+            </if>
+            <if test="params.nongchanpinweituoKucunNumberEnd != null and params.nongchanpinweituoKucunNumberEnd != ''">
+                <![CDATA[  and a.nongchanpinweituo_kucun_number <= #{params.nongchanpinweituoKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.nongchanpinweituoKucunNumber != null and params.nongchanpinweituoKucunNumber != ''">
+                and a.nongchanpinweituo_kucun_number = #{params.nongchanpinweituoKucunNumber}
+             </if>
+            <if test=" params.nongchanpinweituoContent != '' and params.nongchanpinweituoContent != null and params.nongchanpinweituoContent != 'null' ">
+                and a.nongchanpinweituo_content like CONCAT('%',#{params.nongchanpinweituoContent},'%')
+            </if>
+            <if test="params.nongchanpinweituoDeleteStart != null and params.nongchanpinweituoDeleteStart != ''">
+                <![CDATA[  and a.nongchanpinweituo_delete >= #{params.nongchanpinweituoDeleteStart}   ]]>
+            </if>
+            <if test="params.nongchanpinweituoDeleteEnd != null and params.nongchanpinweituoDeleteEnd != ''">
+                <![CDATA[  and a.nongchanpinweituo_delete <= #{params.nongchanpinweituoDeleteEnd}   ]]>
+            </if>
+             <if test="params.nongchanpinweituoDelete != null and params.nongchanpinweituoDelete != ''">
+                and a.nongchanpinweituo_delete = #{params.nongchanpinweituoDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

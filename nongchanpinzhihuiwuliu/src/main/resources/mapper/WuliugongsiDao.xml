@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.WuliugongsiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.username as username
+        ,a.password as password
+        ,a.wuliugongsi_name as wuliugongsiName
+        ,a.wuliugongsi_photo as wuliugongsiPhoto
+        ,a.wuliugongsi_phone as wuliugongsiPhone
+        ,a.wuliugongsi_email as wuliugongsiEmail
+        ,a.sex_types as sexTypes
+        ,a.wuliugongsi_types as wuliugongsiTypes
+        ,a.wuliugongsi_content as wuliugongsiContent
+        ,a.wuliugongsi_delete as wuliugongsiDelete
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.WuliugongsiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM wuliugongsi  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.username != '' and params.username != null and params.username != 'null' ">
+                and a.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test=" params.password != '' and params.password != null and params.password != 'null' ">
+                and a.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test=" params.wuliugongsiName != '' and params.wuliugongsiName != null and params.wuliugongsiName != 'null' ">
+                and a.wuliugongsi_name like CONCAT('%',#{params.wuliugongsiName},'%')
+            </if>
+            <if test=" params.wuliugongsiPhone != '' and params.wuliugongsiPhone != null and params.wuliugongsiPhone != 'null' ">
+                and a.wuliugongsi_phone like CONCAT('%',#{params.wuliugongsiPhone},'%')
+            </if>
+            <if test=" params.wuliugongsiEmail != '' and params.wuliugongsiEmail != null and params.wuliugongsiEmail != 'null' ">
+                and a.wuliugongsi_email like CONCAT('%',#{params.wuliugongsiEmail},'%')
+            </if>
+            <if test="params.sexTypes != null and params.sexTypes != ''">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test="params.wuliugongsiTypes != null and params.wuliugongsiTypes != ''">
+                and a.wuliugongsi_types = #{params.wuliugongsiTypes}
+            </if>
+            <if test=" params.wuliugongsiContent != '' and params.wuliugongsiContent != null and params.wuliugongsiContent != 'null' ">
+                and a.wuliugongsi_content like CONCAT('%',#{params.wuliugongsiContent},'%')
+            </if>
+            <if test="params.wuliugongsiDeleteStart != null and params.wuliugongsiDeleteStart != ''">
+                <![CDATA[  and a.wuliugongsi_delete >= #{params.wuliugongsiDeleteStart}   ]]>
+            </if>
+            <if test="params.wuliugongsiDeleteEnd != null and params.wuliugongsiDeleteEnd != ''">
+                <![CDATA[  and a.wuliugongsi_delete <= #{params.wuliugongsiDeleteEnd}   ]]>
+            </if>
+             <if test="params.wuliugongsiDelete != null and params.wuliugongsiDelete != ''">
+                and a.wuliugongsi_delete = #{params.wuliugongsiDelete}
+             </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
